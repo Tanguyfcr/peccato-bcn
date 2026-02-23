@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peccato Italiano | Pizzería Artesanal Barcelona</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Dancing+Script:wght@700&family=Plus+Jakarta+Sans:wght@300;400;700&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --menu-green: #0a1a12;
+            --menu-red: #e31e24;
+            --menu-orange: #f37021;
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--menu-green);
+            color: #fff;
+            scroll-behavior: smooth;
+        }
+
+        .font-header { font-family: 'Special Elite', cursive; }
+        .font-logo-bold { font-family: 'Bangers', cursive; letter-spacing: 2px; }
+        .font-script { font-family: 'Dancing Script', cursive; }
+
+        .bg-menu-texture {
+            background-image: linear-gradient(rgba(10, 26, 18, 0.9), rgba(10, 26, 18, 0.98)), url('https://www.transparenttextures.com/patterns/dark-wood.png');
+        }
+
+        .hero-bg {
+            background: linear-gradient(rgba(10, 26, 18, 0.5), var(--menu-green)), url('https://images.unsplash.com/photo-1541745537411-b8046dc6d66c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .red-block {
+            background-color: var(--menu-red);
+            border-radius: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .pizza-name {
+            color: var(--menu-red);
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .price-tag {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .nav-glass {
+            background: rgba(10, 26, 18, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .btn-order {
+            background: var(--menu-red);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-order:hover { transform: scale(1.05); background: #ff2e35; }
+
+        .tab-active { background-color: white !important; color: black !important; }
+
+        .admin-edit-outline { outline: 2px dashed #f37021; outline-offset: 4px; border-radius: 4px; }
+        .admin-badge { background: #f37021; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+        
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loading-ring {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+        }
+        .loading-ring:after {
+            content: " ";
+            display: block;
+            width: 64px;
+            height: 64px;
+            margin: 8px;
+            border-radius: 50%;
+            border: 6px solid var(--menu-red);
+            border-color: var(--menu-red) transparent var(--menu-red) transparent;
+            animation: loading-ring 1.2s linear infinite;
+        }
+        @keyframes loading-ring {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-menu-texture">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 nav-glass">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="flex flex-col items-center cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <span class="font-logo-bold text-3xl text-white leading-none">PECCATO</span>
+                    <span class="font-script text-2xl text-white -mt-1 leading-none">Italiano</span>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex space-x-8 font-header text-sm tracking-widest text-stone-300">
+                <a href="#menu" class="hover:text-red-500 transition">La Carta</a>
+                <a href="#horarios" class="hover:text-red-500 transition">Horarios</a>
+                <a href="#contacto" class="hover:text-red-500 transition">Ubicación</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div id="admin-status" class="hidden"><span class="admin-badge">MODO EDITOR</span></div>
+                <a href="tel:610484299" class="btn-order px-6 py-2 rounded-full font-bold text-white text-xs uppercase tracking-tighter">
+                    Llamar Ahora
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg h-[70vh] flex items-center justify-center text-center px-4">
+        <div class="max-w-3xl">
+            <h1 class="font-header text-4xl md:text-6xl mb-4 text-white">PIZZERIA ITALIANA</h1>
+            <div class="w-24 h-1 bg-red-600 mx-auto mb-8"></div>
+            <p class="font-script text-4xl md:text-5xl text-orange-400 mb-8">Un bocado de cielo, un pecado necesario...</p>
+            <a href="#menu" class="inline-block border-2 border-white px-8 py-3 rounded-full font-header hover:bg-white hover:text-black transition uppercase text-xs tracking-widest">Ver Carta</a>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="py-20 px-4 min-h-screen">
+        <div class="max-w-7xl mx-auto">
+            
+            <!-- Error State UI -->
+            <div id="error-box" class="hidden max-w-lg mx-auto bg-red-900/40 border border-red-500 p-8 rounded-3xl text-center mb-10 fade-in">
+                <i class="fas fa-exclamation-triangle text-3xl text-red-500 mb-4"></i>
+                <p class="text-white font-bold mb-2">Error de conexión</p>
+                <p id="error-message" class="text-sm text-red-200 mb-6"></p>
+                <button onclick="window.location.reload()" class="bg-white text-red-900 px-6 py-2 rounded-full text-xs font-bold uppercase hover:bg-stone-200">Reintentar</button>
+            </div>
+
+            <!-- Loading State UI -->
+            <div id="loading-spinner" class="text-center py-20">
+                <div class="loading-ring"></div>
+                <p class="font-header uppercase text-sm tracking-widest mt-4 opacity-50">Preparando la mesa...</p>
+            </div>
+
+            <!-- Content UI -->
+            <div id="menu-content" class="hidden grid lg:grid-cols-12 gap-12 fade-in">
+                
+                <!-- ESTRELLAS Column (Red Block) -->
+                <div class="lg:col-span-5">
+                    <div class="red-block p-8 md:p-12 lg:sticky lg:top-28">
+                        <div class="flex justify-between items-start mb-10 border-b border-black/10 pb-4">
+                            <h2 class="font-header text-4xl text-black/90">ESTRELLAS <br><span class="text-white">DE LA CASA</span></h2>
+                            <button onclick="addItem('estrellas')" class="admin-only hidden bg-black text-white w-10 h-10 flex items-center justify-center rounded-full shadow-lg hover:scale-110 transition"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <div class="space-y-10" id="estrellas-list">
+                            <!-- Items go here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Tabs and Items -->
+                <div class="lg:col-span-7">
+                    <div class="flex flex-wrap gap-3 mb-12" id="tabs-container">
+                        <button onclick="changeTab('pizzas')" class="px-5 py-2 rounded-full border border-white/20 font-header text-[11px] tracking-widest tab-active" id="tab-pizzas">PIZZAS</button>
+                        <button onclick="changeTab('calzone')" class="px-5 py-2 rounded-full border border-white/20 font-header text-[11px] tracking-widest" id="tab-calzone">CALZONE</button>
+                        <button onclick="changeTab('dulce')" class="px-5 py-2 rounded-full border border-white/20 font-header text-[11px] tracking-widest" id="tab-dulce">POSTRES</button>
+                        <button onclick="changeTab('bebidas')" class="px-5 py-2 rounded-full border border-white/20 font-header text-[11px] tracking-widest" id="tab-bebidas">BEBIDAS</button>
+                    </div>
+
+                    <!-- Admin Panel Controls -->
+                    <div class="flex flex-col sm:flex-row justify-between items-center mb-10 gap-4 admin-only hidden bg-white/5 p-6 rounded-3xl border border-white/10">
+                        <div class="text-left">
+                            <p class="text-orange-500 font-bold text-xs uppercase mb-1">Editor de Carta</p>
+                            <p class="text-[10px] text-stone-400 uppercase leading-none">Haz clic en los textos para editar. No olvides guardar.</p>
+                        </div>
+                        <div class="flex gap-2">
+                             <button onclick="addItem(currentTab)" class="bg-white text-black px-4 py-2 rounded-full font-bold text-[10px] uppercase hover:bg-stone-200 transition">Añadir Plato</button>
+                             <button id="save-btn" onclick="saveChanges()" class="bg-green-600 text-white px-6 py-2 rounded-full font-bold text-[10px] uppercase shadow-lg hover:bg-green-500 transition">Guardar Todo</button>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-8" id="dynamic-menu">
+                        <!-- Items go here -->
+                    </div>
+
+                    <!-- Dough Secret -->
+                    <div class="mt-20 p-10 rounded-[40px] bg-white/5 border border-white/10 relative overflow-hidden">
+                        <div class="absolute -right-10 -bottom-10 opacity-5 text-9xl font-logo-bold rotate-12">48H</div>
+                        <div class="flex items-center gap-4 mb-4">
+                            <span class="bg-green-600 text-[10px] font-bold px-2 py-1 rounded">CALIDAD</span>
+                            <h3 class="font-header text-xl uppercase tracking-tighter">Masa de fermentación lenta</h3>
+                        </div>
+                        <p class="text-stone-400 text-sm leading-relaxed max-w-lg">
+                            Trabajamos con diferentes tipos de <span class="text-white">harinas italianas</span> seleccionadas. Nuestra masa reposa al menos <span class="text-orange-500 font-bold underline underline-offset-4">48 horas</span> para garantizar la máxima ligereza y un sabor inconfundible.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Section -->
+    <section id="horarios" class="py-24 bg-black/40">
+        <div class="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-16">
+            <div class="fade-in">
+                <h3 class="font-header text-2xl mb-8 text-red-600">HORARIOS</h3>
+                <div class="space-y-6 font-light text-stone-300">
+                    <div class="flex justify-between border-b border-white/5 pb-3">
+                        <span class="uppercase text-[11px] tracking-widest">Lunes - Martes</span>
+                        <span class="text-red-500 italic font-bold">Cerrado</span>
+                    </div>
+                    <div class="flex justify-between border-b border-white/5 pb-3">
+                        <span class="uppercase text-[11px] tracking-widest">Miércoles - Domingo</span>
+                        <div class="text-right">
+                            <p>13:30 – 16:00</p>
+                            <p>19:30 – 23:00</p>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-stone-600 uppercase italic">Cocinamos con pasión cada día de apertura.</p>
+                </div>
+            </div>
+            <div class="flex flex-col justify-center fade-in">
+                <h3 class="font-header text-2xl mb-6">ENUÉTRANOS</h3>
+                <p class="text-stone-400 mb-2 font-bold uppercase text-xs tracking-widest">Dirección:</p>
+                <p class="text-stone-300 text-lg mb-8">Ronda del Guinardó, 19, B3<br>08024 Barcelona</p>
+                <div class="flex gap-4">
+                    <a href="tel:610484299" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:bg-stone-200 transition text-sm">LLAMAR</a>
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=Ronda+del+Guinardó+19+Barcelona" target="_blank" class="border border-white/20 px-8 py-3 rounded-2xl font-bold hover:bg-white/10 transition text-sm">MAPA</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contacto" class="py-20 border-t border-white/5 bg-black/60">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="mb-12 flex flex-col items-center">
+                <span class="font-logo-bold text-4xl text-white">PECCATO</span>
+                <span class="font-script text-3xl text-white -mt-2">Italiano</span>
+            </div>
+            
+            <div class="flex justify-center gap-8 mb-16 text-3xl">
+                <a href="https://instagram.com/peccatoitalianobcn" target="_blank" class="text-stone-500 hover:text-red-600 transition"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-stone-500 hover:text-blue-600 transition"><i class="fab fa-facebook"></i></a>
+            </div>
+
+            <div class="flex flex-col items-center gap-4">
+                <button onclick="toggleAdmin()" class="text-[9px] text-stone-700 uppercase tracking-widest hover:text-stone-400 transition-colors py-3 px-8 border border-white/5 rounded-full">Gestión de Propietario</button>
+                <p class="text-[9px] text-stone-800 uppercase tracking-[0.3em] font-bold">Pizzeria Peccato Italiano Barcelona &copy; 2024</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK Modules -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Setup
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'pizzeria-peccato';
+
+        // App State
+        window.menuData = null;
+        window.currentTab = 'pizzas';
+        window.isAdmin = false;
+
+        const defaultMenu = {
+            estrellas: [
+                { id: 1, name: "CRUDO DI PARMA", price: "17,50€", desc: "Base pesto albahaca, ajo, tomatitos. Prosciutto di Parma I.G.P, burrata, nueces.", available: true },
+                { id: 2, name: "CARBONARA ORIGINAL", price: "16,50€", desc: "Mozzarella fior di latte, guanciale romano I.G.P, yema de huevo y pecorino.", available: true },
+                { id: 3, name: "LA BRONTESE", price: "16,90€", desc: "Pesto de pistacho siciliano I.G.P, provola ahumada, mortadella bologna I.G.P.", available: true }
+            ],
+            pizzas: [
+                { id: 4, name: "MARGHERITA CLASSICA", price: "9,90€", desc: "Tomate San Marzano, mozzarella fior di latte, albahaca fresca.", available: true },
+                { id: 5, name: "MORTAZZA", price: "14,50€", desc: "Tomate San Marzano, mozzarella fior di latte, tomatitos amarillos, mortadella.", available: true },
+                { id: 6, name: "DIAVOLA O 'PEPPERONI'", price: "12,90€", desc: "Tomate San Marzano, mozzarella fior di latte, salame picante.", available: true },
+                { id: 7, name: "BURRATA", price: "12,90€", desc: "Tomate San Marzano, tomatitos frescos, Parmigiano Reggiano, burrata.", available: true }
+            ],
+            calzone: [
+                { id: 8, name: "CLASSICO", price: "10,90€", desc: "Jamón cocido, mozzarella fior di latte, Parmigiano Reggiano.", available: true },
+                { id: 9, name: "PISTACHOSO", price: "16,50€", desc: "Mozzarella fior di latte, mortadella bologna I.G.P, pesto de pistacho.", available: true }
+            ],
+            dulce: [
+                { id: 10, name: "PIZZA DE NUTELLA", price: "11,90€", desc: "Nutella Ferrero y trozos de nueces seleccionadas.", available: true },
+                { id: 11, name: "CALZONE ORO VERDE", price: "11,90€", desc: "Crema de pistacho siciliano D.O.P hecho artesanalmente.", available: true }
+            ],
+            bebidas: [
+                { id: 12, name: "CERVEZA PERONI", price: "2,50€", desc: "Cerveza premium italiana.", available: true },
+                { id: 13, name: "COPA DE VINO", price: "3,00€", desc: "Selección de la casa.", available: true }
+            ]
+        };
+
+        // Auth Logic (Rule 3)
+        const initAuth = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.error("Auth Failure:", err);
+                showError("Error de autenticación: " + err.message);
+            }
+        };
+
+        initAuth();
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                startRealtimeSubscription(user);
+            }
+        });
+
+        function showError(msg) {
+            document.getElementById('loading-spinner').classList.add('hidden');
+            document.getElementById('error-box').classList.remove('hidden');
+            document.getElementById('error-message').innerText = msg;
+        }
+
+        function startRealtimeSubscription(user) {
+            // FIX: Ensure even number of segments for doc() - 6 segments total
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'menu', 'main');
+            
+            // Backup timeout to load default if DB is empty or fails
+            const dbTimeout = setTimeout(() => {
+                if (!window.menuData) {
+                    window.menuData = defaultMenu;
+                    renderUI();
+                    document.getElementById('loading-spinner').classList.add('hidden');
+                    document.getElementById('menu-content').classList.remove('hidden');
+                }
+            }, 6000);
+
+            onSnapshot(docRef, (snapshot) => {
+                clearTimeout(dbTimeout);
+                if (snapshot.exists()) {
+                    window.menuData = snapshot.data().content;
+                } else {
+                    window.menuData = defaultMenu;
+                }
+                document.getElementById('loading-spinner').classList.add('hidden');
+                document.getElementById('menu-content').classList.remove('hidden');
+                document.getElementById('error-box').classList.add('hidden');
+                renderUI();
+            }, (err) => {
+                console.error("Firestore error:", err);
+                showError("No se pudo conectar a la base de datos.");
+            });
+        }
+
+        // --- RENDER FUNCTIONS ---
+
+        window.renderUI = () => {
+            if (!window.menuData) return;
+
+            // Render Estrellas
+            const estrellasList = document.getElementById('estrellas-list');
+            estrellasList.innerHTML = window.menuData.estrellas.map(item => itemTemplate(item, 'estrellas', true)).join('');
+
+            // Render Active Category
+            const dynamicList = document.getElementById('dynamic-menu');
+            dynamicList.innerHTML = window.menuData[window.currentTab].map(item => itemTemplate(item, window.currentTab, false)).join('');
+            
+            syncAdminStatus();
+        };
+
+        function itemTemplate(item, category, isEstrella) {
+            if (!item.available && !window.isAdmin) return '';
+
+            const opacity = item.available ? '' : 'opacity-25 grayscale scale-95';
+            const editAttr = window.isAdmin ? 'contenteditable="true" spellcheck="false"' : '';
+            const editClass = window.isAdmin ? 'admin-edit-outline px-2 py-1' : '';
+            
+            if (isEstrella) {
+                return `
+                    <div class="group ${opacity} transition-all duration-300">
+                        <div class="flex justify-between items-baseline mb-1 ${editClass}">
+                            <h4 onblur="window.fieldUpdate('${category}', ${item.id}, 'name', this.innerText)" ${editAttr} class="font-bold text-white text-lg tracking-tight focus:bg-white/10 outline-none">${item.name}</h4>
+                            <span onblur="window.fieldUpdate('${category}', ${item.id}, 'price', this.innerText)" ${editAttr} class="text-white font-bold ml-2 focus:bg-white/10 outline-none">${item.price}</span>
+                        </div>
+                        <p onblur="window.fieldUpdate('${category}', ${item.id}, 'desc', this.innerText)" ${editAttr} class="text-black/70 text-xs italic leading-snug font-medium focus:bg-white/10 outline-none">${item.desc}</p>
+                        ${window.isAdmin ? `
+                            <div class="mt-3 flex gap-4 text-[9px] uppercase font-bold text-black/50">
+                                <button onclick="window.itemToggle('${category}', ${item.id})" class="hover:text-white transition">${item.available ? 'En carta' : 'Agotado'}</button>
+                                <button onclick="window.itemRemove('${category}', ${item.id})" class="text-red-900 hover:text-white transition">Borrar</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="border-b border-white/5 pb-8 ${opacity} transition-all duration-300 group">
+                        <div class="flex justify-between items-baseline mb-2 ${editClass}">
+                            <h4 onblur="window.fieldUpdate('${category}', ${item.id}, 'name', this.innerText)" ${editAttr} class="pizza-name text-lg group-hover:text-white transition-colors focus:bg-white/10 outline-none">${item.name}</h4>
+                            <span onblur="window.fieldUpdate('${category}', ${item.id}, 'price', this.innerText)" ${editAttr} class="price-tag focus:bg-white/10 outline-none">${item.price}</span>
+                        </div>
+                        <p onblur="window.fieldUpdate('${category}', ${item.id}, 'desc', this.innerText)" ${editAttr} class="text-stone-500 text-sm font-light leading-relaxed focus:bg-white/10 outline-none">${item.desc}</p>
+                        ${window.isAdmin ? `
+                            <div class="mt-4 flex gap-4 text-[9px] uppercase font-bold text-white/20">
+                                <button onclick="window.itemToggle('${category}', ${item.id})" class="hover:text-orange-500 transition">${item.available ? 'Visible' : 'Oculto'}</button>
+                                <button onclick="window.itemRemove('${category}', ${item.id})" class="text-red-500 hover:text-white transition">Borrar</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+        }
+
+        // --- INTERACTION HANDLERS ---
+
+        window.changeTab = (cat) => {
+            window.currentTab = cat;
+            document.querySelectorAll('#tabs-container button').forEach(b => b.classList.remove('tab-active'));
+            document.getElementById('tab-' + cat).classList.add('tab-active');
+            window.renderUI();
+        };
+
+        window.toggleAdmin = () => {
+            const code = prompt("Introduce clave de acceso (admin123):");
+            if (code === "admin123") {
+                window.isAdmin = !window.isAdmin;
+                syncAdminStatus();
+                window.renderUI();
+            } else if (code !== null) {
+                alert("Acceso denegado.");
+            }
+        };
+
+        function syncAdminStatus() {
+            const adminUI = document.querySelectorAll('.admin-only');
+            adminUI.forEach(el => window.isAdmin ? el.classList.remove('hidden') : el.classList.add('hidden'));
+            const badge = document.getElementById('admin-status');
+            window.isAdmin ? badge.classList.remove('hidden') : badge.classList.add('hidden');
+        }
+
+        window.fieldUpdate = (cat, id, field, val) => {
+            const target = window.menuData[cat].find(i => i.id === id);
+            if (target) target[field] = val;
+        };
+
+        window.itemToggle = (cat, id) => {
+            const target = window.menuData[cat].find(i => i.id === id);
+            if (target) target.available = !target.available;
+            window.renderUI();
+        };
+
+        window.itemRemove = (cat, id) => {
+            if (confirm("¿Estás seguro de eliminar este plato?")) {
+                window.menuData[cat] = window.menuData[cat].filter(i => i.id !== id);
+                window.renderUI();
+            }
+        };
+
+        window.addItem = (cat) => {
+            const nuevo = { id: Date.now(), name: "NUEVO PLATO", price: "0,00€", desc: "Descripción...", available: true };
+            window.menuData[cat].unshift(nuevo);
+            window.renderUI();
+        };
+
+        window.saveChanges = async () => {
+            if (!auth.currentUser) return;
+            const btn = document.getElementById('save-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-sync fa-spin mr-2"></i> Guardando...';
+            btn.disabled = true;
+
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'menu', 'main');
+                await setDoc(docRef, {
+                    content: window.menuData,
+                    updatedAt: new Date().toISOString()
+                });
+                alert("¡Menú actualizado correctamente!");
+            } catch (e) {
+                console.error(e);
+                alert("Error al guardar en la nube.");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        };
+    </script>
+</body>
+</html>
