@@ -102,7 +102,6 @@
             border-bottom: 2px solid var(--menu-orange);
         }
 
-        /* Modal Styles */
         .modal-overlay {
             background: rgba(0,0,0,0.85);
             backdrop-filter: blur(8px);
@@ -135,7 +134,7 @@
         </div>
     </div>
 
-    <!-- Settings Modal (Change credentials) -->
+    <!-- Settings Modal -->
     <div id="settings-modal" class="fixed inset-0 z-[100] hidden modal-overlay flex items-center justify-center p-4">
         <div class="bg-zinc-900 border border-orange-500/30 p-8 rounded-[2rem] w-full max-w-sm shadow-2xl">
             <h3 class="font-header text-2xl mb-2 text-center text-white uppercase">Configuración</h3>
@@ -163,10 +162,10 @@
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-4">
                 <span class="admin-badge">GESTIÓN DE CARTA</span>
-                <p id="current-admin-user" class="text-[9px] text-stone-400 uppercase font-bold"></p>
+                <p id="current-admin-user" class="text-[9px] text-stone-400 uppercase font-bold tracking-widest"></p>
             </div>
             <div class="flex gap-2">
-                <button onclick="window.openSettings()" class="bg-stone-800 text-stone-300 px-3 py-1.5 rounded-lg hover:bg-stone-700 transition text-[10px] uppercase font-bold">
+                <button onclick="window.openSettings()" class="bg-stone-800 text-stone-300 px-3 py-1.5 rounded-lg hover:bg-stone-700 transition text-[10px] uppercase font-bold" title="Configuración de acceso">
                     <i class="fas fa-cog"></i>
                 </button>
                 <button id="save-btn" onclick="window.saveChanges()" class="bg-green-600 text-white px-4 py-1.5 rounded-lg font-bold text-[10px] uppercase hover:bg-green-500 transition shadow-lg">
@@ -208,7 +207,7 @@
         <div class="max-w-3xl">
             <h1 class="font-header text-4xl md:text-6xl mb-4 text-white">PIZZERIA ITALIANA</h1>
             <div class="w-24 h-1 bg-red-600 mx-auto mb-8"></div>
-            <p class="font-script text-4xl md:text-5xl text-orange-400 mb-8">Un bocado de cielo, un pecado necesario...</p>
+            <p class="font-script text-4xl md:text-5xl text-orange-400 mb-8 italic">Un bocado de cielo, un pecado necesario...</p>
         </div>
     </section>
 
@@ -224,12 +223,12 @@
 
             <div id="loading-spinner" class="text-center py-20">
                 <div class="loading-ring"></div>
-                <p class="font-header uppercase text-sm tracking-widest mt-4 opacity-50 text-white/50">Cargando...</p>
+                <p class="font-header uppercase text-sm tracking-widest mt-4 opacity-50 text-white/50">Sincronizando la carta...</p>
             </div>
 
             <div id="menu-content" class="hidden grid lg:grid-cols-12 gap-12 fade-in">
                 
-                <!-- ESTRELLAS -->
+                <!-- Column: Estrellas -->
                 <div class="lg:col-span-5">
                     <div class="red-block p-8 md:p-12 lg:sticky lg:top-28">
                         <div class="flex justify-between items-start mb-10 border-b border-black/10 pb-4">
@@ -240,7 +239,7 @@
                     </div>
                 </div>
 
-                <!-- Tabs -->
+                <!-- Column: Categories -->
                 <div class="lg:col-span-7">
                     <div class="flex flex-wrap gap-3 mb-12" id="tabs-container">
                         <button onclick="changeTab('pizzas')" class="px-5 py-2 rounded-full border border-white/20 font-header text-[11px] tracking-widest tab-active" id="tab-pizzas">PIZZAS</button>
@@ -251,7 +250,7 @@
 
                     <div class="admin-only hidden mb-6">
                         <button onclick="addItem(currentTab)" class="bg-white/10 text-white border border-white/20 px-6 py-3 rounded-2xl font-bold text-xs uppercase hover:bg-white/20 transition w-full text-center">
-                            <i class="fas fa-plus-circle mr-2"></i> Añadir plato
+                            <i class="fas fa-plus-circle mr-2"></i> Añadir plato a esta sección
                         </button>
                     </div>
 
@@ -278,9 +277,9 @@
                 </div>
             </div>
             <div>
-                <h3 class="font-header text-2xl mb-6">UBICACIÓN</h3>
+                <h3 class="font-header text-2xl mb-6 uppercase tracking-tighter">Ubicación</h3>
                 <p class="text-stone-300 text-lg mb-8">Ronda del Guinardó, 19, B3<br>08024 Barcelona</p>
-                <a href="tel:610484299" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:bg-stone-200 transition text-sm">LLAMAR</a>
+                <a href="tel:610484299" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:bg-stone-200 transition text-sm">LLAMAR AL RESTAURANTE</a>
             </div>
         </div>
     </section>
@@ -302,20 +301,19 @@
         import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase Setup
+        // CONFIGURATION
         const firebaseConfig = JSON.parse(__firebase_config);
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'pizzeria-peccato';
 
-        // State
+        // APP STATE
         window.menuData = null;
         window.adminSettings = { user: "admin", pass: "admin123" };
         window.currentTab = 'pizzas';
         window.isAdmin = sessionStorage.getItem('isPeccatoAdmin') === 'true';
 
-        // Initial Data fallback
         const defaultMenu = {
             estrellas: [
                 { id: 1, name: "CRUDO DI PARMA", price: "17,50€", desc: "Pesto albahaca, ajo, tomatitos. Prosciutto di Parma, burrata, nueces.", available: true }
@@ -326,9 +324,9 @@
             calzone: [], dulce: [], bebidas: []
         };
 
-        // --- AUTH & DATA ---
+        // --- AUTH & SYNC ---
 
-        const init = async () => {
+        const startApp = async () => {
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
@@ -338,28 +336,32 @@
             } catch (err) { console.error("Auth Fail", err); }
         };
 
-        init();
+        startApp();
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // Fetch Settings (Username/Password)
+                // Initialize/Fetch Settings (Admin Credentials)
                 const settingsRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'main');
-                const setSnap = await getDoc(settingsRef);
-                if (setSnap.exists()) {
-                    window.adminSettings = setSnap.data();
-                } else {
-                    // Save default settings if not exists
-                    await setDoc(settingsRef, window.adminSettings);
+                try {
+                    const setSnap = await getDoc(settingsRef);
+                    if (setSnap.exists()) {
+                        window.adminSettings = setSnap.data();
+                    } else {
+                        // Create default settings if empty
+                        await setDoc(settingsRef, window.adminSettings);
+                    }
+                } catch (e) {
+                    console.warn("Settings fetch failed (likely rules). Using defaults.");
                 }
 
-                // Fetch Menu
+                // Sync Menu
                 const menuRef = doc(db, 'artifacts', appId, 'public', 'data', 'menu', 'main');
                 onSnapshot(menuRef, (snap) => {
                     window.menuData = snap.exists() ? snap.data().content : defaultMenu;
                     document.getElementById('loading-spinner').classList.add('hidden');
                     document.getElementById('menu-content').classList.remove('hidden');
                     render();
-                }, (err) => showError("Error de conexión."));
+                }, (err) => showError("Error de conexión a la base de datos."));
             }
         });
 
@@ -369,60 +371,64 @@
             document.getElementById('error-message').innerText = msg;
         }
 
-        // --- RENDER ---
+        // --- INTERFACE RENDERING ---
 
         window.render = () => {
             if (!window.menuData) return;
+            
             const estrellas = document.getElementById('estrellas-list');
-            estrellas.innerHTML = window.menuData.estrellas.map(i => itemHtml(i, 'estrellas', true)).join('');
+            estrellas.innerHTML = window.menuData.estrellas.map(i => itemTemplate(i, 'estrellas', true)).join('');
+            
             const dynamic = document.getElementById('dynamic-menu');
-            dynamic.innerHTML = window.menuData[window.currentTab].map(i => itemHtml(i, window.currentTab, false)).join('');
-            updateAdminBar();
+            dynamic.innerHTML = window.menuData[window.currentTab].map(i => itemTemplate(i, window.currentTab, false)).join('');
+            
+            refreshAdminUI();
         };
 
-        function itemHtml(item, cat, isE) {
+        function itemTemplate(item, category, isEstrella) {
             if (!item.available && !window.isAdmin) return '';
-            const op = item.available ? '' : 'opacity-25 grayscale scale-95';
-            const ed = window.isAdmin ? 'contenteditable="true"' : '';
-            const cl = window.isAdmin ? 'admin-edit-outline px-1' : '';
             
-            if (isE) {
+            const opacity = item.available ? '' : 'opacity-25 grayscale scale-95';
+            const editable = window.isAdmin ? 'contenteditable="true" spellcheck="false"' : '';
+            const border = window.isAdmin ? 'admin-edit-outline px-1' : '';
+            
+            if (isEstrella) {
                 return `
-                    <div class="${op} fade-in">
-                        <div class="flex justify-between items-baseline mb-1 ${cl}">
-                            <h4 onblur="window.fieldUp('${cat}', ${item.id}, 'name', this.innerText)" ${ed} class="font-bold text-white text-lg outline-none">${item.name}</h4>
-                            <span onblur="window.fieldUp('${cat}', ${item.id}, 'price', this.innerText)" ${ed} class="text-white font-bold ml-2 outline-none">${item.price}</span>
+                    <div class="${opacity} fade-in">
+                        <div class="flex justify-between items-baseline mb-1 ${border}">
+                            <h4 onblur="window.updateValue('${category}', ${item.id}, 'name', this.innerText)" ${editable} class="font-bold text-white text-lg outline-none">${item.name}</h4>
+                            <span onblur="window.updateValue('${category}', ${item.id}, 'price', this.innerText)" ${editable} class="text-white font-bold ml-2 outline-none">${item.price}</span>
                         </div>
-                        <p onblur="window.fieldUp('${cat}', ${item.id}, 'desc', this.innerText)" ${ed} class="text-black/70 text-xs italic font-medium outline-none leading-snug">${item.desc}</p>
-                        ${window.isAdmin ? `<div class="mt-2 flex gap-4 text-[9px] font-bold text-black/50 uppercase">
-                            <button onclick="window.itemTog('${cat}', ${item.id})">${item.available ? 'Visible' : 'Oculto'}</button>
-                            <button onclick="window.itemDel('${cat}', ${item.id})" class="text-red-900">Eliminar</button>
+                        <p onblur="window.updateValue('${category}', ${item.id}, 'desc', this.innerText)" ${editable} class="text-black/70 text-xs italic font-medium outline-none leading-snug">${item.desc}</p>
+                        ${window.isAdmin ? `<div class="mt-3 flex gap-4 text-[9px] font-bold text-black/50 uppercase tracking-tighter">
+                            <button onclick="window.toggleStock('${category}', ${item.id})" class="hover:text-white transition">${item.available ? 'En Carta' : 'Agotado'}</button>
+                            <button onclick="window.removeDish('${category}', ${item.id})" class="text-red-900 hover:text-white transition">Eliminar</button>
                         </div>` : ''}
                     </div>`;
             } else {
                 return `
-                    <div class="border-b border-white/5 pb-6 ${op} fade-in">
-                        <div class="flex justify-between items-baseline mb-2 ${cl}">
-                            <h4 onblur="window.fieldUp('${cat}', ${item.id}, 'name', this.innerText)" ${ed} class="pizza-name text-lg outline-none">${item.name}</h4>
-                            <span onblur="window.fieldUp('${cat}', ${item.id}, 'price', this.innerText)" ${ed} class="price-tag outline-none">${item.price}</span>
+                    <div class="border-b border-white/5 pb-6 ${opacity} fade-in">
+                        <div class="flex justify-between items-baseline mb-2 ${border}">
+                            <h4 onblur="window.updateValue('${category}', ${item.id}, 'name', this.innerText)" ${editable} class="pizza-name text-lg outline-none">${item.name}</h4>
+                            <span onblur="window.updateValue('${category}', ${item.id}, 'price', this.innerText)" ${editable} class="price-tag outline-none">${item.price}</span>
                         </div>
-                        <p onblur="window.fieldUp('${cat}', ${item.id}, 'desc', this.innerText)" ${ed} class="text-stone-400 text-sm font-light outline-none">${item.desc}</p>
+                        <p onblur="window.updateValue('${category}', ${item.id}, 'desc', this.innerText)" ${editable} class="text-stone-400 text-sm font-light outline-none">${item.desc}</p>
                         ${window.isAdmin ? `<div class="mt-2 flex gap-4 text-[9px] font-bold text-white/20 uppercase">
-                            <button onclick="window.itemTog('${cat}', ${item.id})">${item.available ? 'En carta' : 'Agotado'}</button>
-                            <button onclick="window.itemDel('${cat}', ${item.id})" class="text-red-500">Borrar</button>
+                            <button onclick="window.toggleStock('${category}', ${item.id})">${item.available ? 'Visible' : 'Oculto'}</button>
+                            <button onclick="window.removeDish('${category}', ${item.id})" class="text-red-500 hover:text-white transition">Borrar</button>
                         </div>` : ''}
                     </div>`;
             }
         }
 
-        // --- ACTIONS ---
+        // --- MANAGEMENT ACTIONS ---
 
         window.openLogin = () => { document.getElementById('login-modal').classList.remove('hidden'); };
         window.closeLogin = () => { document.getElementById('login-modal').classList.add('hidden'); };
 
         window.attemptLogin = () => {
-            const user = document.getElementById('login-user').value;
-            const pass = document.getElementById('login-pass').value;
+            const user = document.getElementById('login-user').value.trim();
+            const pass = document.getElementById('login-pass').value.trim();
             if (user === window.adminSettings.user && pass === window.adminSettings.pass) {
                 window.isAdmin = true;
                 sessionStorage.setItem('isPeccatoAdmin', 'true');
@@ -441,14 +447,14 @@
             window.render();
         };
 
-        function updateAdminBar() {
+        function refreshAdminUI() {
             const bar = document.getElementById('admin-bar');
             const nav = document.getElementById('main-nav');
-            const userSpan = document.getElementById('current-admin-user');
+            const userBadge = document.getElementById('current-admin-user');
             if (window.isAdmin) {
                 bar.classList.remove('hidden');
                 nav.style.top = '44px';
-                userSpan.innerText = "HOLA, " + window.adminSettings.user;
+                userBadge.innerText = "HOLA, " + window.adminSettings.user;
             } else {
                 bar.classList.add('hidden');
                 nav.style.top = '0';
@@ -456,22 +462,27 @@
             document.querySelectorAll('.admin-only').forEach(el => window.isAdmin ? el.classList.remove('hidden') : el.classList.add('hidden'));
         }
 
-        // Settings (Change Username/Pass)
+        // Settings (Username/Password Change)
         window.openSettings = () => { 
             document.getElementById('new-user').value = window.adminSettings.user;
+            document.getElementById('new-pass').value = window.adminSettings.pass;
             document.getElementById('settings-modal').classList.remove('hidden'); 
         };
         window.closeSettings = () => { document.getElementById('settings-modal').classList.add('hidden'); };
+        
         window.updateCredentials = async () => {
-            const newUser = document.getElementById('new-user').value.trim();
-            const newPass = document.getElementById('new-pass').value.trim();
-            if (newUser && newPass) {
-                window.adminSettings = { user: newUser, pass: newPass };
-                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'main'), window.adminSettings);
-                alert("Identidad actualizada. Se aplicará al próximo inicio de sesión.");
-                window.closeSettings();
-                window.render();
-            } else { alert("Rellena ambos campos."); }
+            const u = document.getElementById('new-user').value.trim();
+            const p = document.getElementById('new-pass').value.trim();
+            if (u && p) {
+                window.adminSettings = { user: u, pass: p };
+                const ref = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'main');
+                try {
+                    await setDoc(ref, window.adminSettings);
+                    alert("Credenciales actualizadas correctamente.");
+                    window.closeSettings();
+                    window.render();
+                } catch (e) { alert("Error al actualizar credenciales."); }
+            } else { alert("Debes completar ambos campos."); }
         };
 
         window.changeTab = (cat) => {
@@ -481,19 +492,46 @@
             window.render();
         };
 
-        window.fieldUp = (cat, id, f, v) => { const i = window.menuData[cat].find(x => x.id === id); if(i) i[f] = v; };
-        window.itemTog = (cat, id) => { const i = window.menuData[cat].find(x => x.id === id); if(i) i.available = !i.available; window.render(); };
-        window.itemDel = (cat, id) => { if(confirm("¿Borrar?")) { window.menuData[cat] = window.menuData[cat].filter(x => x.id !== id); window.render(); } };
-        window.addItem = (cat) => { window.menuData[cat].unshift({ id: Date.now(), name: "NUEVO PLATO", price: "0,00€", desc: "Descripción...", available: true }); window.render(); };
+        window.updateValue = (cat, id, field, val) => {
+            const item = window.menuData[cat].find(i => i.id === id);
+            if (item) item[field] = val;
+        };
+
+        window.toggleStock = (cat, id) => {
+            const item = window.menuData[cat].find(i => i.id === id);
+            if (item) item.available = !item.available;
+            window.render();
+        };
+
+        window.removeDish = (cat, id) => {
+            if (confirm("¿Estás seguro de eliminar este plato?")) {
+                window.menuData[cat] = window.menuData[cat].filter(i => i.id !== id);
+                window.render();
+            }
+        };
+
+        window.addItem = (cat) => {
+            window.menuData[cat].unshift({
+                id: Date.now(),
+                name: "NUEVO PLATO",
+                price: "0,00€",
+                desc: "Descripción del plato...",
+                available: true
+            });
+            window.render();
+        };
 
         window.saveChanges = async () => {
             const btn = document.getElementById('save-btn');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>';
+            const original = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            btn.disabled = true;
             try {
                 await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'menu', 'main'), { content: window.menuData });
-                alert("Menú guardado en la nube.");
-            } catch (e) { alert("Error al guardar."); }
-            btn.innerHTML = '<i class="fas fa-save mr-1"></i> Guardar';
+                alert("Menú guardado en la nube con éxito.");
+            } catch (e) { alert("Error al guardar la carta."); }
+            btn.innerHTML = original;
+            btn.disabled = false;
         };
     </script>
 </body>
