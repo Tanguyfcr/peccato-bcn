@@ -205,7 +205,7 @@
     <!-- Hero -->
     <section class="hero-bg h-[70vh] flex items-center justify-center text-center px-4">
         <div class="max-w-3xl">
-            <h1 class="font-header text-4xl md:text-6xl mb-4 text-white">PIZZERIA ITALIANA</h1>
+            <h1 class="font-header text-4xl md:text-6xl mb-4 text-white uppercase tracking-tighter">Pizzeria Italiana</h1>
             <div class="w-24 h-1 bg-red-600 mx-auto mb-8"></div>
             <p class="font-script text-4xl md:text-5xl text-orange-400 mb-8 italic">Un bocado de cielo, un pecado necesario...</p>
         </div>
@@ -223,7 +223,7 @@
 
             <div id="loading-spinner" class="text-center py-20">
                 <div class="loading-ring"></div>
-                <p class="font-header uppercase text-sm tracking-widest mt-4 opacity-50 text-white/50">Sincronizando la carta...</p>
+                <p class="font-header uppercase text-sm tracking-widest mt-4 opacity-50 text-white/50">Cargando delicias...</p>
             </div>
 
             <div id="menu-content" class="hidden grid lg:grid-cols-12 gap-12 fade-in">
@@ -264,7 +264,7 @@
     <section id="horarios" class="py-24 bg-black/40">
         <div class="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-16">
             <div>
-                <h3 class="font-header text-2xl mb-8 text-red-600">HORARIOS</h3>
+                <h3 class="font-header text-2xl mb-8 text-red-600 uppercase">Horarios</h3>
                 <div class="space-y-6 text-stone-300">
                     <div class="flex justify-between border-b border-white/5 pb-3">
                         <span class="uppercase text-[11px] tracking-widest font-bold">Lun - Mar</span>
@@ -279,7 +279,7 @@
             <div>
                 <h3 class="font-header text-2xl mb-6 uppercase tracking-tighter">Ubicación</h3>
                 <p class="text-stone-300 text-lg mb-8">Ronda del Guinardó, 19, B3<br>08024 Barcelona</p>
-                <a href="tel:610484299" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:bg-stone-200 transition text-sm">LLAMAR AL RESTAURANTE</a>
+                <a href="tel:610484299" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:bg-stone-200 transition text-sm">LLAMAR</a>
             </div>
         </div>
     </section>
@@ -333,37 +333,55 @@
                 } else {
                     await signInAnonymously(auth);
                 }
-            } catch (err) { console.error("Auth Fail", err); }
+            } catch (err) { 
+                console.error("Auth Fail", err); 
+                showError("Error de autenticación: " + err.message + ". Asegúrate de haber activado el 'Acceso Anónimo' en Firebase.");
+            }
         };
 
         startApp();
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // Initialize/Fetch Settings (Admin Credentials)
+                // 1. Sync Menu Immediately
+                const menuRef = doc(db, 'artifacts', appId, 'public', 'data', 'menu', 'main');
+                
+                // Safety Timeout: if no data after 5s, use defaults
+                const safetyTimer = setTimeout(() => {
+                    if (!window.menuData) {
+                        console.warn("Firestore timeout. Using default menu.");
+                        window.menuData = defaultMenu;
+                        hideSpinner();
+                        render();
+                    }
+                }, 5000);
+
+                onSnapshot(menuRef, (snap) => {
+                    clearTimeout(safetyTimer);
+                    window.menuData = snap.exists() ? snap.data().content : defaultMenu;
+                    hideSpinner();
+                    render();
+                }, (err) => {
+                    console.error(err);
+                    showError("Error de base de datos. Verifica tus reglas de Firestore.");
+                });
+
+                // 2. Fetch Settings in background
                 const settingsRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'main');
                 try {
                     const setSnap = await getDoc(settingsRef);
                     if (setSnap.exists()) {
                         window.adminSettings = setSnap.data();
-                    } else {
-                        // Create default settings if empty
-                        await setDoc(settingsRef, window.adminSettings);
+                        render();
                     }
-                } catch (e) {
-                    console.warn("Settings fetch failed (likely rules). Using defaults.");
-                }
-
-                // Sync Menu
-                const menuRef = doc(db, 'artifacts', appId, 'public', 'data', 'menu', 'main');
-                onSnapshot(menuRef, (snap) => {
-                    window.menuData = snap.exists() ? snap.data().content : defaultMenu;
-                    document.getElementById('loading-spinner').classList.add('hidden');
-                    document.getElementById('menu-content').classList.remove('hidden');
-                    render();
-                }, (err) => showError("Error de conexión a la base de datos."));
+                } catch (e) { console.warn("Settings fetch failed (likely rules)."); }
             }
         });
+
+        function hideSpinner() {
+            document.getElementById('loading-spinner').classList.add('hidden');
+            document.getElementById('menu-content').classList.remove('hidden');
+        }
 
         function showError(msg) {
             document.getElementById('loading-spinner').classList.add('hidden');
