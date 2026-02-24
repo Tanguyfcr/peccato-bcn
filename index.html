@@ -3,564 +3,439 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peccato Italiano | Gestión de Carta Online</title>
+    <title>Peccato Italiano | Pizzería Artesanal Barcelona</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Dancing+Script:wght@700&family=Plus+Jakarta+Sans:wght@300;400;700&family=Special+Elite&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --menu-green: #0a1a12;
-            --menu-red: #e31e24;
-            --menu-orange: #f37021;
-        }
-
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--menu-green);
-            color: #fff;
-            scroll-behavior: smooth;
-        }
-
+        :root { --menu-green: #0a1a12; --menu-red: #e31e24; --menu-orange: #f37021; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--menu-green); color: #fff; scroll-behavior: smooth; overflow-x: hidden; }
         .font-header { font-family: 'Special Elite', cursive; }
         .font-logo-bold { font-family: 'Bangers', cursive; letter-spacing: 2px; }
         .font-script { font-family: 'Dancing Script', cursive; }
-
-        .bg-menu-texture {
-            background-image: linear-gradient(rgba(10, 26, 18, 0.9), rgba(10, 26, 18, 0.98)), url('https://www.transparenttextures.com/patterns/dark-wood.png');
-        }
-
-        .hero-bg {
-            background: linear-gradient(rgba(10, 26, 18, 0.5), var(--menu-green)), url('https://images.unsplash.com/photo-1541745537411-b8046dc6d66c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-        }
-
-        .red-block {
-            background-color: var(--menu-red);
-            border-radius: 40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-
-        .pizza-name {
-            color: var(--menu-red);
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        .price-tag {
-            color: #fff;
-            font-weight: 700;
-        }
-
-        .nav-glass {
-            background: rgba(10, 26, 18, 0.85);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .btn-order {
-            background: var(--menu-red);
-            transition: all 0.3s ease;
-        }
         
-        .btn-order:hover { transform: scale(1.05); background: #ff2e35; }
-
-        .tab-active { background-color: white !important; color: black !important; }
-
-        .admin-edit-outline { outline: 2px dashed #f37021; outline-offset: 4px; border-radius: 4px; }
-        .admin-badge { background: #f37021; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+        .bg-menu-texture { background-image: linear-gradient(rgba(10, 26, 18, 0.94), rgba(10, 26, 18, 0.98)), url('https://www.transparenttextures.com/patterns/dark-wood.png'); }
+        .hero-bg { background: linear-gradient(rgba(10, 26, 18, 0.4), var(--menu-green)), url('https://images.unsplash.com/photo-1541745537411-b8046dc6d66c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center; }
         
-        .fade-in { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .loading-ring {
-            display: inline-block;
-            width: 80px;
-            height: 80px;
-        }
-        .loading-ring:after {
-            content: " ";
-            display: block;
-            width: 64px;
-            height: 64px;
-            margin: 8px;
-            border-radius: 50%;
-            border: 6px solid var(--menu-red);
-            border-color: var(--menu-red) transparent var(--menu-red) transparent;
-            animation: loading-ring 1.2s linear infinite;
-        }
-        @keyframes loading-ring {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        #admin-bar {
-            background: #111;
-            border-bottom: 2px solid var(--menu-orange);
-        }
-
-        .modal-overlay {
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(8px);
-        }
+        .red-block { background-color: var(--menu-red); border-radius: 45px; box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6); }
+        .nav-glass { background: rgba(10, 26, 18, 0.85); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .btn-order { background: var(--menu-red); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        
+        .admin-edit-outline { outline: 2px dashed var(--menu-orange); outline-offset: 6px; border-radius: 12px; background: rgba(243, 112, 33, 0.03); }
+        .admin-badge { background: var(--menu-orange); color: white; font-size: 10px; padding: 2px 10px; border-radius: 6px; font-weight: 900; }
+        .tab-active { background-color: white !important; color: black !important; transform: scale(1.05); font-weight: 900; }
+        
+        .lang-btn.active { color: var(--menu-orange); border-bottom: 2px solid var(--menu-orange); }
+        
+        .fade-in { animation: fadeIn 0.8s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .loading-ring { display: inline-block; width: 60px; height: 60px; border: 4px solid rgba(227, 30, 36, 0.1); border-radius: 50%; border-top-color: var(--menu-red); animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .pizza-name { color: var(--menu-red); font-weight: 800; text-transform: uppercase; }
+        .price-tag { color: #fff; font-weight: 900; }
     </style>
 </head>
 <body class="bg-menu-texture">
 
-    <!-- Login Modal -->
-    <div id="login-modal" class="fixed inset-0 z-[100] hidden modal-overlay flex items-center justify-center p-4">
-        <div class="bg-zinc-900 border border-white/10 p-8 rounded-[2rem] w-full max-w-sm shadow-2xl">
-            <h3 class="font-header text-2xl mb-2 text-center text-white uppercase">Acceso Privado</h3>
-            <p class="text-stone-500 text-[10px] text-center mb-8 tracking-widest uppercase italic">Solo personal autorizado</p>
-            
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-[10px] uppercase text-stone-400 mb-1 ml-1 font-bold">Usuario</label>
-                    <input type="text" id="login-user" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-orange-500 transition">
-                </div>
-                <div>
-                    <label class="block text-[10px] uppercase text-stone-400 mb-1 ml-1 font-bold">Contraseña</label>
-                    <input type="password" id="login-pass" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-orange-500 transition">
-                </div>
-                <div id="login-error" class="hidden text-red-500 text-[10px] text-center font-bold">Credenciales incorrectas</div>
-                <div class="flex gap-2 pt-4">
-                    <button onclick="window.closeLogin()" class="flex-1 bg-stone-800 text-white py-3 rounded-xl font-bold text-xs uppercase hover:bg-stone-700 transition">Cerrar</button>
-                    <button onclick="window.attemptLogin()" class="flex-1 bg-orange-600 text-white py-3 rounded-xl font-bold text-xs uppercase hover:bg-orange-500 transition shadow-lg shadow-orange-600/20">Entrar</button>
+    <!-- Admin Modals -->
+    <div id="login-modal" class="fixed inset-0 hidden z-[200] bg-black/95 backdrop-blur-xl flex items-center justify-center p-6">
+        <div class="bg-zinc-900 border border-white/5 p-10 rounded-[3rem] w-full max-w-sm shadow-2xl">
+            <h3 class="font-header text-3xl mb-10 text-center text-white uppercase tracking-tighter text-black">Acceso Admin</h3>
+            <div class="space-y-6 text-black">
+                <input type="text" id="login-user" placeholder="USUARIO" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white outline-none focus:border-orange-500 transition-all font-bold">
+                <input type="password" id="login-pass" placeholder="CONTRASEÑA" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white outline-none focus:border-orange-500 transition-all font-bold">
+                <div id="login-error" class="hidden text-red-500 text-[10px] text-center font-black uppercase bg-red-500/10 py-2 rounded-lg">Error de credenciales</div>
+                <div class="flex flex-col gap-4 pt-4">
+                    <button onclick="window.attemptLogin()" class="w-full bg-orange-600 text-white py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-orange-500 transition shadow-2xl shadow-orange-600/30">Entrar</button>
+                    <button onclick="window.closeLogin()" class="w-full py-2 text-[10px] font-bold uppercase text-stone-600 hover:text-white transition">Cancelar</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Settings Modal -->
-    <div id="settings-modal" class="fixed inset-0 z-[100] hidden modal-overlay flex items-center justify-center p-4">
-        <div class="bg-zinc-900 border border-orange-500/30 p-8 rounded-[2rem] w-full max-w-sm shadow-2xl">
-            <h3 class="font-header text-2xl mb-2 text-center text-white uppercase">Configuración</h3>
-            <p class="text-stone-500 text-[10px] text-center mb-8 tracking-widest uppercase italic">Cambiar credenciales de acceso</p>
-            
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-[10px] uppercase text-stone-400 mb-1 ml-1 font-bold">Nuevo Usuario</label>
-                    <input type="text" id="new-user" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-green-500 transition">
-                </div>
-                <div>
-                    <label class="block text-[10px] uppercase text-stone-400 mb-1 ml-1 font-bold">Nueva Contraseña</label>
-                    <input type="password" id="new-pass" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-green-500 transition">
-                </div>
-                <div class="flex gap-2 pt-4">
-                    <button onclick="window.closeSettings()" class="flex-1 bg-stone-800 text-white py-3 rounded-xl font-bold text-xs uppercase hover:bg-stone-700 transition">Cancelar</button>
-                    <button onclick="window.updateCredentials()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold text-xs uppercase hover:bg-green-500 transition">Actualizar</button>
-                </div>
+    <div id="settings-modal" class="fixed inset-0 hidden z-[200] bg-black/95 backdrop-blur-xl flex items-center justify-center p-6 text-black">
+        <div class="bg-zinc-900 border border-green-500/20 p-10 rounded-[3rem] w-full max-w-sm">
+            <h3 class="font-header text-2xl mb-8 text-center text-white uppercase">Nueva Clave</h3>
+            <div class="space-y-5">
+                <input type="text" id="new-user" placeholder="NUEVO USUARIO" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white outline-none">
+                <input type="password" id="new-pass" placeholder="NUEVA CONTRASEÑA" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white outline-none">
+                <button onclick="window.updateCredentials()" class="w-full bg-green-600 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest">Actualizar</button>
+                <button onclick="window.closeSettings()" class="w-full py-2 text-[10px] font-bold uppercase text-stone-600">Volver</button>
             </div>
         </div>
     </div>
 
-    <!-- Admin Dashboard Bar -->
-    <div id="admin-bar" class="fixed top-0 left-0 w-full z-[60] hidden py-2 px-6 shadow-2xl border-b border-white/5">
+    <!-- Admin Bar -->
+    <div id="admin-bar" class="fixed top-0 left-0 w-full hidden z-[100] py-2 px-6 border-b border-white/5 bg-black">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <span class="admin-badge">GESTIÓN DE CARTA</span>
-                <p id="current-admin-user" class="text-[9px] text-stone-400 uppercase font-bold tracking-widest"></p>
+                <span class="admin-badge">EDITOR</span>
+                <p id="current-admin-user" class="text-[9px] text-stone-400 uppercase font-black"></p>
             </div>
             <div class="flex gap-2">
-                <button onclick="window.openSettings()" class="bg-stone-800 text-stone-300 px-3 py-1.5 rounded-lg hover:bg-stone-700 transition text-[10px] uppercase font-bold" title="Configuración de acceso">
-                    <i class="fas fa-cog"></i>
-                </button>
-                <button id="save-btn" onclick="window.saveChanges()" class="bg-green-600 text-white px-4 py-1.5 rounded-lg font-bold text-[10px] uppercase hover:bg-green-500 transition shadow-lg">
-                    <i class="fas fa-save mr-1"></i> Guardar
-                </button>
-                <button onclick="window.logoutAdmin()" class="bg-stone-800 text-stone-300 px-4 py-1.5 rounded-lg font-bold text-[10px] uppercase hover:bg-red-900 hover:text-white transition">
-                    <i class="fas fa-sign-out-alt"></i>
-                </button>
+                <button onclick="window.openSettings()" class="text-stone-500 hover:text-white px-2"><i class="fas fa-cog"></i></button>
+                <button id="save-btn" onclick="window.saveChanges()" class="bg-green-600 text-white px-4 py-1.5 rounded-lg font-black text-[10px] uppercase">Guardar</button>
+                <button onclick="window.logoutAdmin()" class="bg-zinc-800 text-white px-4 py-1.5 rounded-lg font-black text-[10px] uppercase">Salir</button>
             </div>
         </div>
     </div>
 
     <!-- Navbar -->
-    <nav id="main-nav" class="fixed w-full z-50 nav-glass transition-all duration-300">
+    <nav id="main-nav" class="fixed w-full z-50 nav-glass transition-all duration-500">
         <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-            <div class="flex items-center">
-                <div class="flex flex-col items-center cursor-pointer" onclick="window.scrollTo(0,0)">
-                    <span class="font-logo-bold text-3xl text-white leading-none">PECCATO</span>
-                    <span class="font-script text-2xl text-white -mt-1 leading-none">Italiano</span>
-                </div>
+            <!-- Logo -->
+            <div class="flex flex-col items-center cursor-pointer group" onclick="window.scrollTo(0,0)">
+                <span class="font-logo-bold text-2xl md:text-3xl text-white leading-none">PECCATO</span>
+                <span class="font-script text-xl md:text-2xl text-red-600 -mt-1 leading-none italic">Italiano</span>
             </div>
             
-            <div class="hidden md:flex space-x-8 font-header text-sm tracking-widest text-stone-300">
-                <a href="#menu" class="hover:text-red-500 transition">La Carta</a>
-                <a href="#horarios" class="hover:text-red-500 transition">Horarios</a>
-                <a href="#contacto" class="hover:text-red-500 transition">Ubicación</a>
+            <!-- Desktop Links -->
+            <div class="hidden lg:flex items-center space-x-10 font-header text-[10px] tracking-[0.3em] text-stone-500">
+                <a href="#menu" id="nav-menu" class="hover:text-red-500 transition uppercase">La Carta</a>
+                <a href="#horarios" id="nav-horarios" class="hover:text-red-500 transition uppercase">Horarios</a>
+                <a href="#contacto" id="nav-contacto" class="hover:text-red-500 transition uppercase">Ubicación</a>
             </div>
 
-            <div class="flex items-center gap-4">
-                <a href="tel:610484299" class="btn-order px-6 py-2 rounded-full font-bold text-white text-xs uppercase tracking-tighter">
-                    Llamar Ahora
+            <!-- Language & Action -->
+            <div class="flex items-center gap-4 md:gap-8">
+                <div class="flex gap-3 text-[10px] font-black text-stone-600">
+                    <button onclick="window.setLang('es')" id="lang-es" class="lang-btn hover:text-white transition">ES</button>
+                    <button onclick="window.setLang('cat')" id="lang-cat" class="lang-btn hover:text-white transition">CAT</button>
+                    <button onclick="window.setLang('en')" id="lang-en" class="lang-btn hover:text-white transition">EN</button>
+                </div>
+                <a href="tel:610484299" class="btn-order px-6 py-2.5 rounded-2xl font-black text-white text-[10px] uppercase tracking-widest">
+                    Llamar
                 </a>
             </div>
         </div>
     </nav>
 
     <!-- Hero -->
-    <section class="hero-bg h-[70vh] flex items-center justify-center text-center px-4">
-        <div class="max-w-3xl">
-            <h1 class="font-header text-4xl md:text-6xl mb-4 text-white uppercase tracking-tighter">Pizzeria Italiana</h1>
-            <div class="w-24 h-1 bg-red-600 mx-auto mb-8"></div>
-            <p class="font-script text-4xl md:text-5xl text-orange-400 mb-8 italic">Un bocado de cielo, un pecado necesario...</p>
+    <section class="hero-bg h-[75vh] flex items-center justify-center text-center px-4 pt-20">
+        <div class="max-w-4xl fade-in">
+            <h1 class="font-header text-4xl md:text-7xl mb-6 text-white leading-tight uppercase tracking-tighter">Pizzeria <br><span class="text-red-600 italic">Artesana</span></h1>
+            <div class="w-16 h-0.5 bg-white/20 mx-auto mb-10"></div>
+            <p id="hero-sub" class="font-script text-4xl md:text-5xl text-orange-400 mb-12">Un pecado necesario...</p>
+            <a href="#menu" id="btn-explore" class="inline-block border border-white/30 px-10 py-4 rounded-2xl font-header text-[10px] uppercase tracking-[0.4em] hover:bg-white hover:text-black transition-all">Explorar Carta</a>
         </div>
     </section>
 
     <!-- Menu Section -->
-    <section id="menu" class="py-20 px-4 min-h-screen">
+    <section id="menu" class="py-24 px-4 min-h-screen">
         <div class="max-w-7xl mx-auto">
             
-            <div id="error-box" class="hidden max-w-lg mx-auto bg-red-900/40 border border-red-500 p-8 rounded-3xl text-center mb-10 fade-in">
-                <i class="fas fa-exclamation-triangle text-3xl text-red-500 mb-4"></i>
-                <p id="error-message" class="text-sm text-red-200 mb-6"></p>
-                <button onclick="window.location.reload()" class="bg-white text-red-900 px-6 py-2 rounded-full text-xs font-bold uppercase hover:bg-stone-200">Reintentar</button>
+            <div id="error-box" class="hidden max-w-lg mx-auto bg-red-900/50 border border-red-500 p-10 rounded-[2.5rem] text-center mb-16 shadow-2xl">
+                <i class="fas fa-satellite-dish text-3xl text-red-500 mb-4"></i>
+                <p id="error-message" class="text-sm text-red-100 font-bold"></p>
+                <button onclick="window.location.reload()" class="mt-6 bg-white text-red-900 px-8 py-3 rounded-2xl text-[10px] font-black uppercase">Reintentar</button>
             </div>
 
-            <div id="loading-spinner" class="text-center py-20">
-                <div class="loading-ring"></div>
-                <p class="font-header uppercase text-sm tracking-widest mt-4 opacity-50 text-white/50">Cargando delicias...</p>
+            <div id="loading-spinner" class="text-center py-32">
+                <div class="loading-ring mx-auto"></div>
+                <p id="txt-loading" class="font-header uppercase text-[10px] tracking-[0.5em] opacity-30 text-white mt-6">Cargando...</p>
             </div>
 
-            <div id="menu-content" class="hidden grid lg:grid-cols-12 gap-12 fade-in">
-                
+            <div id="menu-content" class="hidden grid lg:grid-cols-12 gap-16 fade-in">
                 <!-- Column: Estrellas -->
                 <div class="lg:col-span-5">
-                    <div class="red-block p-8 md:p-12 lg:sticky lg:top-28">
-                        <div class="flex justify-between items-start mb-10 border-b border-black/10 pb-4">
-                            <h2 class="font-header text-4xl text-black/90 uppercase">Estrellas <br><span class="text-white">de la Casa</span></h2>
-                            <button onclick="addItem('estrellas')" class="admin-only hidden bg-black text-white w-10 h-10 flex items-center justify-center rounded-full shadow-lg hover:scale-110 transition"><i class="fas fa-plus"></i></button>
+                    <div class="red-block p-10 md:p-14 lg:sticky lg:top-32">
+                        <div class="flex justify-between items-start mb-12 border-b border-black/10 pb-6">
+                            <h2 class="font-header text-3xl text-black uppercase leading-none" id="txt-stars-title">Estrellas <br><span class="text-white">de la Casa</span></h2>
+                            <button onclick="addItem('estrellas')" class="admin-only hidden bg-black text-white w-10 h-10 flex items-center justify-center rounded-2xl hover:scale-110 transition"><i class="fas fa-plus"></i></button>
                         </div>
-                        <div class="space-y-10" id="estrellas-list"></div>
+                        <div class="space-y-12" id="estrellas-list"></div>
                     </div>
                 </div>
 
-                <!-- Column: Categories -->
+                <!-- Column: Dynamic -->
                 <div class="lg:col-span-7">
-                    <div class="flex flex-wrap gap-3 mb-12" id="tabs-container">
-                        <button onclick="changeTab('pizzas')" class="px-5 py-2 rounded-full border border-white/20 font-header text-[11px] tracking-widest tab-active" id="tab-pizzas">PIZZAS</button>
-                        <button onclick="changeTab('calzone')" class="px-5 py-2 rounded-full border border-white/20 font-header text-[11px] tracking-widest" id="tab-calzone">CALZONE</button>
-                        <button onclick="changeTab('dulce')" class="px-5 py-2 rounded-full border border-white/20 font-header text-[11px] tracking-widest" id="tab-dulce">POSTRES</button>
-                        <button onclick="changeTab('bebidas')" class="px-5 py-2 rounded-full border border-white/20 font-header text-[11px] tracking-widest" id="tab-bebidas">BEBIDAS</button>
+                    <div class="flex flex-wrap gap-2 mb-16" id="tabs-container">
+                        <button onclick="changeTab('pizzas')" class="px-6 py-3 rounded-2xl border border-white/10 font-header text-[10px] tracking-[0.2em] uppercase tab-active" id="tab-pizzas">PIZZAS</button>
+                        <button onclick="changeTab('calzone')" class="px-6 py-3 rounded-2xl border border-white/10 font-header text-[10px] tracking-[0.2em] uppercase" id="tab-calzone">CALZONE</button>
+                        <button onclick="changeTab('dulce')" class="px-6 py-3 rounded-2xl border border-white/10 font-header text-[10px] tracking-[0.2em] uppercase" id="tab-dulce">POSTRES</button>
+                        <button onclick="changeTab('bebidas')" class="px-6 py-3 rounded-2xl border border-white/10 font-header text-[10px] tracking-[0.2em] uppercase" id="tab-bebidas">BEBIDAS</button>
                     </div>
 
-                    <div class="admin-only hidden mb-6">
-                        <button onclick="addItem(currentTab)" class="bg-white/10 text-white border border-white/20 px-6 py-3 rounded-2xl font-bold text-xs uppercase hover:bg-white/20 transition w-full text-center">
-                            <i class="fas fa-plus-circle mr-2"></i> Añadir plato a esta sección
-                        </button>
+                    <div class="admin-only hidden mb-10">
+                        <button onclick="addItem(currentTab)" class="bg-white/5 border border-white/10 px-8 py-4 rounded-2xl font-black text-[10px] uppercase w-full">Añadir plato</button>
                     </div>
 
-                    <div class="grid gap-8" id="dynamic-menu"></div>
+                    <div class="grid gap-12" id="dynamic-menu"></div>
+                    
+                    <!-- Quality Badge -->
+                    <div class="mt-24 p-12 rounded-[3rem] bg-black/20 border border-white/5 group relative overflow-hidden">
+                        <div class="absolute -right-8 -bottom-8 opacity-[0.03] text-9xl font-logo-bold group-hover:rotate-12 transition-transform duration-1000">48H</div>
+                        <div class="flex items-center gap-4 mb-6">
+                            <span class="bg-green-600/20 text-green-500 text-[9px] font-black px-3 py-1 rounded-full border border-green-500/20 tracking-widest">CALIDAD</span>
+                            <h3 id="txt-masa-title" class="font-header text-xl uppercase tracking-tighter text-stone-200">Masa fermentada</h3>
+                        </div>
+                        <p id="txt-masa-desc" class="text-stone-400 text-sm leading-relaxed max-w-lg italic font-light">Harinas italianas y 48h de maduración.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Info -->
-    <section id="horarios" class="py-24 bg-black/40">
-        <div class="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-16">
+    <section id="horarios" class="py-32 bg-black/40 border-y border-white/5 text-center md:text-left">
+        <div class="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-24">
             <div>
-                <h3 class="font-header text-2xl mb-8 text-red-600 uppercase">Horarios</h3>
-                <div class="space-y-6 text-stone-300">
-                    <div class="flex justify-between border-b border-white/5 pb-3">
-                        <span class="uppercase text-[11px] tracking-widest font-bold">Lun - Mar</span>
-                        <span class="text-red-500 italic font-bold">Cerrado</span>
-                    </div>
-                    <div class="flex justify-between border-b border-white/5 pb-3">
-                        <span class="uppercase text-[11px] tracking-widest font-bold">Mié - Dom</span>
-                        <span class="text-sm">13:30 – 16:00 / 19:30 – 23:00</span>
-                    </div>
+                <h3 id="txt-horarios-title" class="font-header text-3xl mb-12 text-red-600 uppercase">Horarios</h3>
+                <div class="space-y-6 text-stone-300 font-bold uppercase text-[10px] tracking-widest">
+                    <div class="flex justify-between border-b border-white/5 pb-4"><span id="txt-lunmar">Lun - Mar</span><span class="text-red-500 italic">Cerrado</span></div>
+                    <div class="flex justify-between border-b border-white/5 pb-4"><span id="txt-miedom">Mié - Dom</span><span class="text-white">13:30–16:00 / 19:30–23:00</span></div>
                 </div>
             </div>
-            <div>
-                <h3 class="font-header text-2xl mb-6 uppercase tracking-tighter">Ubicación</h3>
-                <p class="text-stone-300 text-lg mb-8">Ronda del Guinardó, 19, B3<br>08024 Barcelona</p>
-                <a href="tel:610484299" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:bg-stone-200 transition text-sm">LLAMAR</a>
+            <div class="flex flex-col justify-center">
+                <h3 id="txt-ubi-title" class="font-header text-3xl mb-8 uppercase">Ubicación</h3>
+                <p class="text-stone-300 text-lg mb-10 leading-relaxed">Ronda del Guinardó, 19, B3<br>08024 Barcelona</p>
+                <div class="flex gap-4 justify-center md:justify-start">
+                    <a href="tel:610484299" class="bg-white text-black px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest">Llamar</a>
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=Ronda+del+Guinardó+19+Barcelona" target="_blank" class="border border-white/20 px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest">Mapa</a>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer id="contacto" class="py-20 border-t border-white/5 bg-black/60">
-        <div class="max-w-7xl mx-auto px-6 text-center">
-            <div class="mb-12 flex flex-col items-center">
-                <span class="font-logo-bold text-4xl text-white">PECCATO</span>
-                <span class="font-script text-3xl text-white -mt-2">Italiano</span>
-            </div>
-            
-            <button onclick="window.openLogin()" id="owner-access-btn" class="text-[9px] text-stone-700 uppercase tracking-widest hover:text-stone-400 transition-colors py-3 px-8 border border-white/5 rounded-full">Acceso Propietario</button>
+    <footer id="contacto" class="py-24 bg-black text-center relative overflow-hidden">
+        <div class="mb-12 flex flex-col items-center">
+            <span class="font-logo-bold text-5xl text-white tracking-widest">PECCATO</span>
+            <span class="font-script text-3xl text-red-600 -mt-2 leading-none">Italiano</span>
         </div>
+        <button onclick="window.openLogin()" id="owner-access-btn" class="text-[9px] text-stone-700 uppercase tracking-[0.4em] font-black hover:text-stone-300 transition-colors py-4 px-10 border border-white/10 rounded-full">Gestión Propietario</button>
     </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // CONFIGURATION
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBZ__3Q7PRdos4H4rz1HNGVzIlhOyuzFrc",
-  authDomain: "peccato-italiano.firebaseapp.com",
-  projectId: "peccato-italiano",
-  storageBucket: "peccato-italiano.firebasestorage.app",
-  messagingSenderId: "764136267246",
-  appId: "1:764136267246:web:f6ff102bfc5c8b9b9ac2ff",
-  measurementId: "G-2YV094VKGJ"
-};
+        // CONFIGURATION BRANCHÉE
+        const firebaseConfig = {
+            apiKey: "AIzaSyBZ__3Q7PRdos4H4rz1HNGVzIlhOyuzFrc",
+            authDomain: "peccato-italiano.firebaseapp.com",
+            projectId: "peccato-italiano",
+            storageBucket: "peccato-italiano.firebasestorage.app",
+            messagingSenderId: "764136267246",
+            appId: "1:764136267246:web:f6ff102bfc5c8b9b9ac2ff",
+            measurementId: "G-2YV094VKGJ"
+        };
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'pizzeria-peccato';
+        const appId = "peccato-prod-v1";
 
-        // APP STATE
         window.menuData = null;
         window.adminSettings = { user: "admin", pass: "admin123" };
         window.currentTab = 'pizzas';
-        window.isAdmin = sessionStorage.getItem('isPeccatoAdmin') === 'true';
+        window.isAdmin = sessionStorage.getItem('peccatoAdminAuth') === 'true';
+        window.currentLang = localStorage.getItem('peccatoLang') || 'es';
+
+        const i18n = {
+            es: { 
+                sub: "Un pecado necesario...", 
+                masaT: "Masa de fermentación lenta", 
+                masaD: "Utilizamos harinas italianas y 48h de maduración para una ligereza máxima.", 
+                hT: "Horarios de Pecado", 
+                uT: "Ubicación", 
+                lunmar: "Lunes - Martes", 
+                miedom: "Miércoles - Domingo",
+                navMenu: "La Carta",
+                navHorarios: "Horarios",
+                navContacto: "Ubicación",
+                btnExplore: "Explorar Carta",
+                starsTitle: "Estrellas <br><span class='text-white'>de la Casa</span>",
+                loading: "Cargando delicias..."
+            },
+            cat: { 
+                sub: "Un pecat necessari...", 
+                masaT: "Massa de fermentació lenta", 
+                masaD: "Utilitzem farines italianes i 48h de maduració per a una lleugeresa màxima.", 
+                hT: "Horaris de Pecat", 
+                uT: "Ubicació", 
+                lunmar: "Dilluns - Dimarts", 
+                miedom: "Dimecres - Diumenge",
+                navMenu: "La Carta",
+                navHorarios: "Horaris",
+                navContacto: "Ubicació",
+                btnExplore: "Explorar la Carta",
+                starsTitle: "Estrelles <br><span class='text-white'>de la Casa</span>",
+                loading: "Carregant delícies..."
+            },
+            en: { 
+                sub: "A necessary sin...", 
+                masaT: "Slow fermentation dough", 
+                masaD: "We use Italian flours and 48h maturation for maximum lightness.", 
+                hT: "Opening Hours", 
+                uT: "Location", 
+                lunmar: "Mon - Tue", 
+                miedom: "Wed - Sun",
+                navMenu: "The Menu",
+                navHorarios: "Hours",
+                navContacto: "Location",
+                btnExplore: "Explore Menu",
+                starsTitle: "House <br><span class='text-white'>Specialties</span>",
+                loading: "Loading delicacies..."
+            }
+        };
 
         const defaultMenu = {
-            estrellas: [
-                { id: 1, name: "CRUDO DI PARMA", price: "17,50€", desc: "Pesto albahaca, ajo, tomatitos. Prosciutto di Parma, burrata, nueces.", available: true }
-            ],
-            pizzas: [
-                { id: 2, name: "MARGHERITA", price: "9,90€", desc: "Tomate San Marzano, mozzarella fior di latte, albahaca.", available: true }
-            ],
+            estrellas: [ { id: 1, name: "CRUDO DI PARMA", price: "17,50€", desc: "Base pesto albahaca, jamón de Parma, burrata.", available: true } ],
+            pizzas: [ { id: 2, name: "MARGHERITA", price: "9,90€", desc: "Tomate San Marzano, mozzarella, albahaca.", available: true } ],
             calzone: [], dulce: [], bebidas: []
         };
 
-        // --- AUTH & SYNC ---
-
-        const startApp = async () => {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (err) { 
-                console.error("Auth Fail", err); 
-                showError("Error de autenticación: " + err.message + ". Asegúrate de haber activado el 'Acceso Anónimo' en Firebase.");
-            }
+        const start = async () => {
+            try { await signInAnonymously(auth); } catch (e) { showError("Error Auth: Activa 'Anonymous Access' en Firebase."); }
         };
-
-        startApp();
+        start();
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // 1. Sync Menu Immediately
-                const menuRef = doc(db, 'artifacts', appId, 'public', 'data', 'menu', 'main');
-                
-                // Safety Timeout: if no data after 5s, use defaults
-                const safetyTimer = setTimeout(() => {
-                    if (!window.menuData) {
-                        console.warn("Firestore timeout. Using default menu.");
-                        window.menuData = defaultMenu;
-                        hideSpinner();
-                        render();
-                    }
-                }, 5000);
-
-                onSnapshot(menuRef, (snap) => {
-                    clearTimeout(safetyTimer);
-                    window.menuData = snap.exists() ? snap.data().content : defaultMenu;
-                    hideSpinner();
-                    render();
-                }, (err) => {
-                    console.error(err);
-                    showError("Error de base de datos. Verifica tus reglas de Firestore.");
-                });
-
-                // 2. Fetch Settings in background
-                const settingsRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'main');
+                // Settings Sync
+                const sRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'main');
                 try {
-                    const setSnap = await getDoc(settingsRef);
-                    if (setSnap.exists()) {
-                        window.adminSettings = setSnap.data();
-                        render();
-                    }
-                } catch (e) { console.warn("Settings fetch failed (likely rules)."); }
+                    const snap = await getDoc(sRef);
+                    if (snap.exists()) window.adminSettings = snap.data();
+                    else await setDoc(sRef, window.adminSettings);
+                } catch(e) {}
+
+                // Menu Sync
+                const mRef = doc(db, 'artifacts', appId, 'public', 'data', 'menu', 'main');
+                const safety = setTimeout(() => { if(!window.menuData) { window.menuData = defaultMenu; render(); hideLoad(); } }, 4000);
+                onSnapshot(mRef, (snap) => {
+                    clearTimeout(safety);
+                    window.menuData = snap.exists() ? snap.data().content : defaultMenu;
+                    render(); hideLoad();
+                }, (e) => showError("Rules Error: Allow read/write in Firestore."));
             }
         });
 
-        function hideSpinner() {
-            document.getElementById('loading-spinner').classList.add('hidden');
-            document.getElementById('menu-content').classList.remove('hidden');
-        }
+        window.setLang = (lang) => {
+            window.currentLang = lang;
+            localStorage.setItem('peccatoLang', lang);
+            updateStaticTexts();
+            render();
+        };
 
-        function showError(msg) {
-            document.getElementById('loading-spinner').classList.add('hidden');
-            document.getElementById('error-box').classList.remove('hidden');
-            document.getElementById('error-message').innerText = msg;
+        function updateStaticTexts() {
+            const t = i18n[window.currentLang];
+            document.getElementById('hero-sub').innerText = t.sub;
+            document.getElementById('txt-masa-title').innerText = t.masaT;
+            document.getElementById('txt-masa-desc').innerText = t.masaD;
+            document.getElementById('txt-horarios-title').innerText = t.hT;
+            document.getElementById('txt-ubi-title').innerText = t.uT;
+            document.getElementById('txt-lunmar').innerText = t.lunmar;
+            document.getElementById('txt-miedom').innerText = t.miedom;
+            document.getElementById('nav-menu').innerText = t.navMenu;
+            document.getElementById('nav-horarios').innerText = t.navHorarios;
+            document.getElementById('nav-contacto').innerText = t.navContacto;
+            document.getElementById('btn-explore').innerText = t.btnExplore;
+            document.getElementById('txt-stars-title').innerHTML = t.starsTitle;
+            document.getElementById('txt-loading').innerText = t.loading;
+            
+            ['es', 'cat', 'en'].forEach(l => {
+                const b = document.getElementById('lang-' + l);
+                if(b) b.classList.toggle('active', l === window.currentLang);
+            });
         }
-
-        // --- INTERFACE RENDERING ---
 
         window.render = () => {
             if (!window.menuData) return;
-            
-            const estrellas = document.getElementById('estrellas-list');
-            estrellas.innerHTML = window.menuData.estrellas.map(i => itemTemplate(i, 'estrellas', true)).join('');
-            
-            const dynamic = document.getElementById('dynamic-menu');
-            dynamic.innerHTML = window.menuData[window.currentTab].map(i => itemTemplate(i, window.currentTab, false)).join('');
-            
-            refreshAdminUI();
+            document.getElementById('estrellas-list').innerHTML = window.menuData.estrellas.map(i => itemHtml(i, 'estrellas', true)).join('');
+            document.getElementById('dynamic-menu').innerHTML = (window.menuData[window.currentTab] || []).map(i => itemHtml(i, window.currentTab, false)).join('');
+            syncAdminUI();
+            updateStaticTexts();
         };
 
-        function itemTemplate(item, category, isEstrella) {
+        function itemHtml(item, cat, isE) {
             if (!item.available && !window.isAdmin) return '';
-            
-            const opacity = item.available ? '' : 'opacity-25 grayscale scale-95';
-            const editable = window.isAdmin ? 'contenteditable="true" spellcheck="false"' : '';
-            const border = window.isAdmin ? 'admin-edit-outline px-1' : '';
-            
-            if (isEstrella) {
+            const op = item.available ? '' : 'opacity-20 grayscale scale-95';
+            const ed = window.isAdmin ? 'contenteditable="true" spellcheck="false"' : '';
+            const cl = window.isAdmin ? 'admin-edit-outline px-2 py-1' : '';
+            if (isE) {
                 return `
-                    <div class="${opacity} fade-in">
-                        <div class="flex justify-between items-baseline mb-1 ${border}">
-                            <h4 onblur="window.updateValue('${category}', ${item.id}, 'name', this.innerText)" ${editable} class="font-bold text-white text-lg outline-none">${item.name}</h4>
-                            <span onblur="window.updateValue('${category}', ${item.id}, 'price', this.innerText)" ${editable} class="text-white font-bold ml-2 outline-none">${item.price}</span>
-                        </div>
-                        <p onblur="window.updateValue('${category}', ${item.id}, 'desc', this.innerText)" ${editable} class="text-black/70 text-xs italic font-medium outline-none leading-snug">${item.desc}</p>
-                        ${window.isAdmin ? `<div class="mt-3 flex gap-4 text-[9px] font-bold text-black/50 uppercase tracking-tighter">
-                            <button onclick="window.toggleStock('${category}', ${item.id})" class="hover:text-white transition">${item.available ? 'En Carta' : 'Agotado'}</button>
-                            <button onclick="window.removeDish('${category}', ${item.id})" class="text-red-900 hover:text-white transition">Eliminar</button>
-                        </div>` : ''}
-                    </div>`;
+                <div class="${op} fade-in">
+                    <div class="flex justify-between items-baseline mb-2 ${cl}">
+                        <h4 onblur="window.upVal('${cat}', ${item.id}, 'name', this.innerText)" ${ed} class="font-bold text-white text-lg md:text-xl outline-none">${item.name}</h4>
+                        <span onblur="window.upVal('${cat}', ${item.id}, 'price', this.innerText)" ${ed} class="text-white font-black ml-4 outline-none">${item.price}</span>
+                    </div>
+                    <p onblur="window.upVal('${cat}', ${item.id}, 'desc', this.innerText)" ${ed} class="text-black/70 text-xs italic outline-none leading-snug">${item.desc}</p>
+                    ${window.isAdmin ? `<div class="mt-4 flex gap-4 text-[9px] font-black uppercase text-black/50">
+                        <button onclick="window.itTog('${cat}', ${item.id})">${item.available ? 'En Carta' : 'Agotado'}</button>
+                        <button onclick="window.itDel('${cat}', ${item.id})" class="text-red-900">Eliminar</button>
+                    </div>` : ''}
+                </div>`;
             } else {
                 return `
-                    <div class="border-b border-white/5 pb-6 ${opacity} fade-in">
-                        <div class="flex justify-between items-baseline mb-2 ${border}">
-                            <h4 onblur="window.updateValue('${category}', ${item.id}, 'name', this.innerText)" ${editable} class="pizza-name text-lg outline-none">${item.name}</h4>
-                            <span onblur="window.updateValue('${category}', ${item.id}, 'price', this.innerText)" ${editable} class="price-tag outline-none">${item.price}</span>
-                        </div>
-                        <p onblur="window.updateValue('${category}', ${item.id}, 'desc', this.innerText)" ${editable} class="text-stone-400 text-sm font-light outline-none">${item.desc}</p>
-                        ${window.isAdmin ? `<div class="mt-2 flex gap-4 text-[9px] font-bold text-white/20 uppercase">
-                            <button onclick="window.toggleStock('${category}', ${item.id})">${item.available ? 'Visible' : 'Oculto'}</button>
-                            <button onclick="window.removeDish('${category}', ${item.id})" class="text-red-500 hover:text-white transition">Borrar</button>
-                        </div>` : ''}
-                    </div>`;
+                <div class="border-b border-white/5 pb-10 ${op} fade-in">
+                    <div class="flex justify-between items-baseline mb-3 ${cl}">
+                        <h4 onblur="window.upVal('${cat}', ${item.id}, 'name', this.innerText)" ${ed} class="pizza-name text-lg md:text-xl outline-none">${item.name}</h4>
+                        <span onblur="window.upVal('${cat}', ${item.id}, 'price', this.innerText)" ${ed} class="price-tag outline-none">${item.price}</span>
+                    </div>
+                    <p onblur="window.upVal('${cat}', ${item.id}, 'desc', this.innerText)" ${ed} class="text-stone-500 text-sm font-light outline-none italic">${item.desc}</p>
+                    ${window.isAdmin ? `<div class="mt-4 flex gap-5 text-[9px] font-black uppercase text-white/20">
+                        <button onclick="window.itTog('${cat}', ${item.id})">${item.available ? 'Visible' : 'Oculto'}</button>
+                        <button onclick="window.itDel('${cat}', ${item.id})" class="text-red-500">Borrar</button>
+                    </div>` : ''}
+                </div>`;
             }
         }
 
-        // --- MANAGEMENT ACTIONS ---
-
-        window.openLogin = () => { document.getElementById('login-modal').classList.remove('hidden'); };
-        window.closeLogin = () => { document.getElementById('login-modal').classList.add('hidden'); };
-
+        window.openLogin = () => document.getElementById('login-modal').classList.remove('hidden');
+        window.closeLogin = () => document.getElementById('login-modal').classList.add('hidden');
         window.attemptLogin = () => {
-            const user = document.getElementById('login-user').value.trim();
-            const pass = document.getElementById('login-pass').value.trim();
-            if (user === window.adminSettings.user && pass === window.adminSettings.pass) {
-                window.isAdmin = true;
-                sessionStorage.setItem('isPeccatoAdmin', 'true');
-                window.closeLogin();
-                window.render();
-            } else {
-                const err = document.getElementById('login-error');
-                err.classList.remove('hidden');
-                setTimeout(() => err.classList.add('hidden'), 3000);
-            }
+            const u = document.getElementById('login-user').value.trim();
+            const p = document.getElementById('login-pass').value.trim();
+            if (u === window.adminSettings.user && p === window.adminSettings.pass) {
+                window.isAdmin = true; sessionStorage.setItem('peccatoAdminAuth', 'true');
+                window.closeLogin(); render();
+            } else { document.getElementById('login-error').classList.remove('hidden'); }
         };
-
-        window.logoutAdmin = () => {
-            window.isAdmin = false;
-            sessionStorage.removeItem('isPeccatoAdmin');
-            window.render();
-        };
-
-        function refreshAdminUI() {
-            const bar = document.getElementById('admin-bar');
-            const nav = document.getElementById('main-nav');
-            const userBadge = document.getElementById('current-admin-user');
-            if (window.isAdmin) {
-                bar.classList.remove('hidden');
-                nav.style.top = '44px';
-                userBadge.innerText = "HOLA, " + window.adminSettings.user;
-            } else {
-                bar.classList.add('hidden');
-                nav.style.top = '0';
-            }
-            document.querySelectorAll('.admin-only').forEach(el => window.isAdmin ? el.classList.remove('hidden') : el.classList.add('hidden'));
-        }
-
-        // Settings (Username/Password Change)
-        window.openSettings = () => { 
-            document.getElementById('new-user').value = window.adminSettings.user;
-            document.getElementById('new-pass').value = window.adminSettings.pass;
-            document.getElementById('settings-modal').classList.remove('hidden'); 
-        };
-        window.closeSettings = () => { document.getElementById('settings-modal').classList.add('hidden'); };
-        
+        window.logoutAdmin = () => { window.isAdmin = false; sessionStorage.removeItem('peccatoAdminAuth'); render(); };
+        window.openSettings = () => { document.getElementById('new-user').value = window.adminSettings.user; document.getElementById('settings-modal').classList.remove('hidden'); };
+        window.closeSettings = () => document.getElementById('settings-modal').classList.add('hidden');
         window.updateCredentials = async () => {
             const u = document.getElementById('new-user').value.trim();
             const p = document.getElementById('new-pass').value.trim();
-            if (u && p) {
+            if(u && p) {
                 window.adminSettings = { user: u, pass: p };
-                const ref = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'main');
-                try {
-                    await setDoc(ref, window.adminSettings);
-                    alert("Credenciales actualizadas correctamente.");
-                    window.closeSettings();
-                    window.render();
-                } catch (e) { alert("Error al actualizar credenciales."); }
-            } else { alert("Debes completar ambos campos."); }
-        };
-
-        window.changeTab = (cat) => {
-            window.currentTab = cat;
-            document.querySelectorAll('#tabs-container button').forEach(b => b.classList.remove('tab-active'));
-            document.getElementById('tab-' + cat).classList.add('tab-active');
-            window.render();
-        };
-
-        window.updateValue = (cat, id, field, val) => {
-            const item = window.menuData[cat].find(i => i.id === id);
-            if (item) item[field] = val;
-        };
-
-        window.toggleStock = (cat, id) => {
-            const item = window.menuData[cat].find(i => i.id === id);
-            if (item) item.available = !item.available;
-            window.render();
-        };
-
-        window.removeDish = (cat, id) => {
-            if (confirm("¿Estás seguro de eliminar este plato?")) {
-                window.menuData[cat] = window.menuData[cat].filter(i => i.id !== id);
-                window.render();
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'main'), window.adminSettings);
+                alert("Actualizado."); window.closeSettings(); render();
             }
         };
 
-        window.addItem = (cat) => {
-            window.menuData[cat].unshift({
-                id: Date.now(),
-                name: "NUEVO PLATO",
-                price: "0,00€",
-                desc: "Descripción del plato...",
-                available: true
-            });
-            window.render();
-        };
+        function syncAdminUI() {
+            const bar = document.getElementById('admin-bar');
+            const nav = document.getElementById('main-nav');
+            const userDisp = document.getElementById('current-admin-user');
+            if(window.isAdmin) { bar.classList.remove('hidden'); nav.style.top='48px'; userDisp.innerText = "HOLA, " + window.adminSettings.user; }
+            else { bar.classList.add('hidden'); nav.style.top='0'; }
+            document.querySelectorAll('.admin-only').forEach(e => window.isAdmin ? e.classList.remove('hidden') : e.classList.add('hidden'));
+        }
 
+        window.changeTab = (c) => { window.currentTab = c; document.querySelectorAll('#tabs-container button').forEach(b => b.classList.remove('tab-active')); document.getElementById('tab-'+c).classList.add('tab-active'); render(); };
+        window.upVal = (c, id, f, v) => { const i = window.menuData[c].find(x => x.id === id); if(i) i[f] = v; };
+        window.itTog = (c, id) => { const i = window.menuData[c].find(x => x.id === id); if(i) i.available = !i.available; render(); };
+        window.itDel = (c, id) => { if(confirm("¿Borrar?")) { window.menuData[c] = window.menuData[c].filter(x => x.id !== id); render(); } };
+        window.addItem = (c) => { if(!window.menuData[c]) window.menuData[c] = []; window.menuData[c].unshift({ id: Date.now(), name: "NUEVO PLATO", price: "0,00€", desc: "Descripción...", available: true }); render(); };
         window.saveChanges = async () => {
             const btn = document.getElementById('save-btn');
-            const original = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            btn.disabled = true;
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
             try {
                 await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'menu', 'main'), { content: window.menuData });
-                alert("Menú guardado en la nube con éxito.");
-            } catch (e) { alert("Error al guardar la carta."); }
-            btn.innerHTML = original;
-            btn.disabled = false;
+                alert("¡Menú guardado!");
+            } catch(e) { alert("Error."); }
+            btn.innerHTML = orig;
         };
+
+        function hideLoad() { document.getElementById('loading-spinner').classList.add('hidden'); document.getElementById('menu-content').classList.remove('hidden'); }
+        function showError(m) { document.getElementById('loading-spinner').classList.add('hidden'); document.getElementById('error-box').classList.remove('hidden'); document.getElementById('error-message').innerText = m; }
     </script>
 </body>
 </html>
-
